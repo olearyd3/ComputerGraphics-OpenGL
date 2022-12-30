@@ -20,6 +20,7 @@ uniform vec3 lightPos1 = vec3(-12.0f, 5.0f, 8.0f); // Light position
 
 in vec2 TexCoord;
 uniform sampler2D ourTexture;
+in float visibility;
 
 struct Material {
     sampler2D diffuse;
@@ -43,6 +44,8 @@ struct Light {
 
 uniform Light pointLights[NUM_POINT_LIGHTS];
 
+const vec3 fogColor = vec3(0.5, 0.5, 0.5);
+
 // function for point lights
 vec3 calculatePointLights(Light pointLights, vec3 norm, vec3 fragPos, vec3 viewVec);
 
@@ -54,7 +57,7 @@ void main() {
         result = result + calculatePointLights(pointLights[i], N, vertPos, V);
     }
    //vec4 texColor = texture(ourTexture, TexCoord);
-    gl_FragColor = vec4(result, 1.0);
+    gl_FragColor = mix(vec4(fogColor, 1.0), vec4(result, 1.0), visibility);
 }
 
 /*void main() {
