@@ -225,7 +225,11 @@ vec3 armJoint2Pos = vec3(0.0f, 0.0f, 0.0f);
 float reindeerPos_z = 0.0f;
 float reindeer2Pos_z = 90.0f;
 float reindeer3Pos_z = 220.0f;
-vec3 reindeerPos = vec3(8.0f, 10.0f, 0.0f);
+float reindeer4Pos_z = 120.0f;
+float reindeer5Pos_z = 0.0f;
+float reindeer6Pos_z = 220.0f;
+float reindeerPos_y = 10.0f;
+vec3 reindeerPos = vec3(8.0f, reindeerPos_y, 0.0f);
 vec3 canePos = vec3(7.0f, -0.1f, -10.0f);
 vec3 canePos2 = vec3(0.0f, -0.1f, -10.0f);
 vec3 canePos3 = vec3(-7.0f, -0.1f, -10.0f);
@@ -821,6 +825,8 @@ void generateObjectBufferMesh() {
 	glBufferData(GL_ARRAY_BUFFER, harnessData.mPointCount * sizeof(vec3), &harnessData.mNormals[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[15]);
 	glBufferData(GL_ARRAY_BUFFER, harnessData.mPointCount * sizeof(vec2), &harnessData.mTextureCoords[0], GL_STATIC_DRAW);
+
+	// REINDEER 3
 	// REINDEER BODY
 	loc4[9] = glGetAttribLocation(shaderProgramID, "vertex_position");
 	loc4[10] = glGetAttribLocation(shaderProgramID, "vertex_normal");
@@ -831,8 +837,6 @@ void generateObjectBufferMesh() {
 	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec3), &reindeerData.mNormals[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[16]);
 	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec2), &reindeerData.mTextureCoords[0], GL_STATIC_DRAW);
-
-	// REINDEER 3
 	// reindeer main bell
 	loc4[12] = glGetAttribLocation(shaderProgramID, "vertex_position");
 	loc4[13] = glGetAttribLocation(shaderProgramID, "vertex_normal");
@@ -853,6 +857,42 @@ void generateObjectBufferMesh() {
 	glBufferData(GL_ARRAY_BUFFER, harnessData.mPointCount * sizeof(vec3), &harnessData.mNormals[0], GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[18]);
 	glBufferData(GL_ARRAY_BUFFER, harnessData.mPointCount * sizeof(vec2), &harnessData.mTextureCoords[0], GL_STATIC_DRAW);
+
+	// REINDEER 4
+	// REINDEER BODY
+	loc4[18] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc4[19] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc4[20] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[36]);
+	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec3), &reindeerData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[36]);
+	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec3), &reindeerData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[36]);
+	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec2), &reindeerData.mTextureCoords[0], GL_STATIC_DRAW);
+
+	// REINDEER 5
+	// REINDEER BODY
+	loc4[21] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc4[22] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc4[23] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[37]);
+	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec3), &reindeerData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[37]);
+	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec3), &reindeerData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[37]);
+	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec2), &reindeerData.mTextureCoords[0], GL_STATIC_DRAW);
+
+	// REINDEER 6
+	// REINDEER BODY
+	loc3[18] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc3[19] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc3[20] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[38]);
+	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec3), &reindeerData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[38]);
+	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec3), &reindeerData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[38]);
+	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec2), &reindeerData.mTextureCoords[0], GL_STATIC_DRAW);
 
 	// ground -- need to fix texture
 	loc2[0] = glGetAttribLocation(shaderProgramID, "vertex_position");
@@ -1119,6 +1159,8 @@ void display() {
 	GLuint specular_location = glGetUniformLocation(shaderProgramID, "material.specular");
 	GLuint shininess_location = glGetUniformLocation(shaderProgramID, "material.shininess");
 
+	GLuint camPos = glGetUniformLocation(shaderProgramID, "viewPos");
+	glUniform3fv(camPos, 1, cameraPos.v);
 	// set up the lights
 	// LIGHT 0
 	GLuint light0_location = glGetUniformLocation(shaderProgramID, "pointLights[0].position");
@@ -1129,15 +1171,15 @@ void display() {
 	GLuint light0_linear = glGetUniformLocation(shaderProgramID, "Light[0].linear");
 	GLuint light0_quadratic = glGetUniformLocation(shaderProgramID, "Light[0].quadratic");
 	vec3 light0Position = vec3(1.0f, 15.0f, -5.0f);
-	vec3 lightAmbient = vec3(0.2f, 0.2f, 0.2f);
-	vec3 lightDiffuse = vec3(0.1f, 0.1f, 0.1f);
+	vec3 lightAmbient = vec3(0.1f, 0.1f, 0.1f);
+	vec3 lightDiffuse = vec3(0.8f, 0.8f, 0.8f);
 	vec3 lightSpecular = vec3(0.8f, 0.8f, 0.8f);
 	float lightConstant = 1.0f;
-	float lightLinear = 0.001;
-	float lightQuadratic = 0.005;
+	float lightLinear = 0.09f;
+	float lightQuadratic = 0.032f;
 	glUniform3fv(light0_location, 1, light0Position.v);
-	glUniform3fv(light0_ambient, 1, lightDiffuse.v);
-	glUniform3fv(light0_diffuse, 1, lightSpecular.v);
+	glUniform3fv(light0_ambient, 1, lightAmbient.v);
+	glUniform3fv(light0_diffuse, 1, lightDiffuse.v);
 	glUniform3fv(light0_specular, 1, lightSpecular.v);
 	glUniform1f(light0_constant, lightConstant);
 	glUniform1f(light0_linear, lightLinear);
@@ -1152,8 +1194,8 @@ void display() {
 	GLuint light1_quadratic = glGetUniformLocation(shaderProgramID, "Light[1].quadratic");
 	vec3 light1Position = vec3(-10.0f, 4.5f, -2.0f);
 	glUniform3fv(light1_location, 1, light1Position.v);
-	glUniform3fv(light1_ambient, 1, lightDiffuse.v);
-	glUniform3fv(light1_diffuse, 1, lightSpecular.v);
+	glUniform3fv(light1_ambient, 1, lightAmbient.v);
+	glUniform3fv(light1_diffuse, 1, lightDiffuse.v);
 	glUniform3fv(light1_specular, 1, lightSpecular.v);
 	glUniform1f(light1_constant, lightConstant);
 	glUniform1f(light1_linear, lightLinear);
@@ -1168,8 +1210,8 @@ void display() {
 	GLuint light2_quadratic = glGetUniformLocation(shaderProgramID, "Light[2].quadratic");
 	vec3 light2Position = vec3(5.0f, 8.0f, 0.0f);
 	glUniform3fv(light2_location, 2, light2Position.v);
-	glUniform3fv(light2_ambient, 2, lightDiffuse.v);
-	glUniform3fv(light2_diffuse, 2, lightSpecular.v);
+	glUniform3fv(light2_ambient, 2, lightAmbient.v);
+	glUniform3fv(light2_diffuse, 2, lightDiffuse.v);
 	glUniform3fv(light2_specular, 2, lightSpecular.v);
 	glUniform1f(light2_constant, lightConstant);
 	glUniform1f(light2_linear, lightLinear);
@@ -1643,7 +1685,7 @@ void display() {
 
 	// reindeer
 	mat4 modelReindeer = identity_mat4();
-	modelReindeer = translate(modelReindeer, vec3(10.0f, 15.0f, 0.0f));
+	modelReindeer = translate(modelReindeer, vec3(10.0f, reindeerPos_y, 0.0f));
 	modelReindeer = scale(modelReindeer, vec3(0.6f, 0.6f, 0.6f));
 	modelReindeer = rotate_y_deg(modelReindeer, reindeerPos_z);
 	modelReindeer = translate(modelReindeer, vec3(10.0f, 0.0f, 0.0f));
@@ -1671,7 +1713,7 @@ void display() {
 
 	// reindeer 2
 	mat4 modelReindeer2 = identity_mat4();
-	modelReindeer2 = translate(modelReindeer2, vec3(5.0f, 15.0f, 0.0f));
+	modelReindeer2 = translate(modelReindeer2, vec3(5.0f, reindeerPos_y, 0.0f));
 	modelReindeer2 = scale(modelReindeer2, vec3(0.6f, 0.6f, 0.6f));
 	modelReindeer2 = rotate_y_deg(modelReindeer2, reindeer2Pos_z);
 	modelReindeer2 = translate(modelReindeer2, vec3(10.0f, 0.0f, 0.0f));
@@ -1699,7 +1741,7 @@ void display() {
 
 	// reindeer 3
 	mat4 modelReindeer3 = identity_mat4();
-	modelReindeer3 = translate(modelReindeer3, vec3(15.0f, 15.0f, 0.0f));
+	modelReindeer3 = translate(modelReindeer3, vec3(15.0f, reindeerPos_y, 0.0f));
 	modelReindeer3 = scale(modelReindeer3, vec3(0.6f, 0.6f, 0.6f));
 	modelReindeer3 = rotate_y_deg(modelReindeer3, reindeer3Pos_z);
 	modelReindeer3 = translate(modelReindeer3, vec3(10.0f, 0.0f, 0.0f));
@@ -1722,6 +1764,90 @@ void display() {
 	glEnableVertexAttribArray(loc4[11]);
 	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[16]);
 	glVertexAttribPointer(loc4[11], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, reindeer_texture);
+	glDrawArrays(GL_TRIANGLES, 0, reindeerData.mPointCount);
+
+	// reindeer 4
+	mat4 modelReindeer4 = identity_mat4();
+	modelReindeer4 = translate(modelReindeer4, vec3(15.0f, reindeerPos_y, 0.0f));
+	modelReindeer4 = scale(modelReindeer4, vec3(0.6f, 0.6f, 0.6f));
+	modelReindeer4 = rotate_y_deg(modelReindeer4, reindeer4Pos_z);
+	modelReindeer4 = translate(modelReindeer4, vec3(0.0f, 0.0f, 0.0f));
+	//ambient = vec3(0.9f, 0.9f, 0.9f);
+	diffuse = vec3(0.4f, 0.4f, 0.4f);
+	specular = vec3(0.0f, 0.0f, 0.0f);
+	shininess = 120.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelReindeer4.m);
+	glEnableVertexAttribArray(loc4[18]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[36]);
+	glVertexAttribPointer(loc4[18], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc4[19]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[36]);
+	glVertexAttribPointer(loc4[19], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc4[20]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[36]);
+	glVertexAttribPointer(loc4[20], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, reindeer_texture);
+	glDrawArrays(GL_TRIANGLES, 0, reindeerData.mPointCount);
+
+	// reindeer 5
+	mat4 modelReindeer5 = identity_mat4();
+	modelReindeer5 = translate(modelReindeer5, vec3(7.0f, reindeerPos_y, 0.0f));
+	modelReindeer5 = scale(modelReindeer5, vec3(0.6f, 0.6f, 0.6f));
+	modelReindeer5 = rotate_y_deg(modelReindeer5, reindeer5Pos_z);
+	modelReindeer5 = translate(modelReindeer5, vec3(0.0f, 0.0f, 0.0f));
+	//ambient = vec3(0.9f, 0.9f, 0.9f);
+	diffuse = vec3(0.4f, 0.4f, 0.4f);
+	specular = vec3(0.0f, 0.0f, 0.0f);
+	shininess = 120.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelReindeer5.m);
+	glEnableVertexAttribArray(loc4[21]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[37]);
+	glVertexAttribPointer(loc4[21], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc4[22]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[37]);
+	glVertexAttribPointer(loc4[22], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc4[23]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[37]);
+	glVertexAttribPointer(loc4[23], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, reindeer_texture);
+	glDrawArrays(GL_TRIANGLES, 0, reindeerData.mPointCount);
+
+	// reindeer 6
+	mat4 modelReindeer6 = identity_mat4();
+	modelReindeer6 = translate(modelReindeer6, vec3(18.0f, reindeerPos_y, 0.0f));
+	modelReindeer6 = scale(modelReindeer6, vec3(0.6f, 0.6f, 0.6f));
+	modelReindeer6 = rotate_y_deg(modelReindeer6, reindeer6Pos_z);
+	modelReindeer6 = translate(modelReindeer6, vec3(0.0f, 0.0f, 0.0f));
+	//ambient = vec3(0.9f, 0.9f, 0.9f);
+	diffuse = vec3(0.4f, 0.4f, 0.4f);
+	specular = vec3(0.0f, 0.0f, 0.0f);
+	shininess = 120.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelReindeer6.m);
+	glEnableVertexAttribArray(loc3[18]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[38]);
+	glVertexAttribPointer(loc3[18], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc3[19]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[38]);
+	glVertexAttribPointer(loc3[19], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc3[20]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[38]);
+	glVertexAttribPointer(loc3[20], 2, GL_FLOAT, GL_FALSE, 0, NULL);
 	glBindTexture(GL_TEXTURE_2D, reindeer_texture);
 	glDrawArrays(GL_TRIANGLES, 0, reindeerData.mPointCount);
 
@@ -2261,6 +2387,10 @@ void updateScene() {
 	reindeerPos_z += 2.0f;
 	reindeer2Pos_z += 2.0f;
 	reindeer3Pos_z += 2.0f;
+	reindeer4Pos_z += 2.0f;
+	reindeer5Pos_z += 2.0f;
+	reindeer6Pos_z += 2.0f;
+	reindeerPos_y = 13 + sin(reindeerPos_z/90);
 	// reindeer movements as crowd
 	reindeerMovements(delta);
 	snowmanMovements();
