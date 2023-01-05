@@ -11,7 +11,7 @@ uniform mat4 view;
 varying vec3 normal;
 varying vec3 vertPos;
 
-out vec2 TexCoord;
+out vec2 TexCoords;
 
 out float visibility;
 out float distance;
@@ -38,6 +38,6 @@ void main() {
 	vertPos = vec3(vertPos4) / vertPos4.w;
 	normal = NormalMatrix * vertex_normal;
 
-	TexCoord = vertex_texture;
+	TexCoords = vertex_texture;
 }
 
