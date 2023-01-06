@@ -20,26 +20,27 @@
 
 // Project includes
 #include "maths_funcs.h"
-//#include "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/obj_parser.h"
-//#include "camera.h"
-//#include "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/Mesh.h"
-#include "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/Shader.h"
 #define STB_IMAGE_IMPLEMENTATION
-//#include "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/Model.h"
-#include "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/Skybox.h"
-#include "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/stb_image.h"
-//#include "camera.h"
+#include "stb_image.h"
 
-//global var to start/stop rotation here
+// global var to start/stop rotation here
 bool start_y = false;
 bool start_z = false;
 bool start_x = false;
+// change bools for snowman arms
 bool ortho = false;
 bool change = false;
+bool change2 = false;
+bool change3 = false;
+bool change4 = false;
+bool change5 = false;
+// for moving reindeer forward and back or snowmen forward and back
 bool reindeerBack = false;
 bool snowmanBack = false;
 bool snowman2Back = false;
 bool snowman3Back = false;
+bool snowman4Back = false;
+bool snowman5Back = false;
 // from LearnOpenGL Camera tut
 bool firstMouse = true;
 float yaw = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
@@ -47,88 +48,41 @@ float pitch = 0.0f;
 float lastX = 800.0f / 2.0;
 float lastY = 600.0 / 2.0;
 float fov = 45.0f;
+// pi
 #define M_PI 3.1415926535897932384626433832795
 /*----------------------------------------------------------------------------
 MESH TO LOAD
 ----------------------------------------------------------------------------*/
 // meshes to be used in project
-#define MESH_NAME "C:/Users/markj/Downloads/snowmanbod.dae"
-#define ARM1_MESH "C:/Users/markj/Downloads/rightArmSmaller.dae"
-#define ARM2_MESH "C:/Users/markj/Downloads/leftArmSmaller.dae"
-#define GROUND_PLANE_MESH "C:/Users/markj/Downloads/snowterrain.dae"
-#define HAT_MESH "C:/Users/markj/Downloads/hat.dae"
-#define NOSE "C:/Users/markj/Downloads/carrot.dae"
-#define EYES "C:/Users/markj/Downloads/eyes.dae"
-#define FIR "C:/Users/markj/Downloads/4m7qrzwizbnk-fir/fir.obj"
-#define LEAVES "C:/Users/markj/Downloads/treeleaves.dae"
-#define TRUNK "C:/Users/markj/Downloads/treetrunk.dae"
-#define REINDEER "C:/Users/markj/Downloads/reindeerbody.dae"
-#define MAIN_BELL "C:/Users/markj/Downloads/mainbell.dae"
-#define HARNESS "C:/Users/markj/Downloads/reindeerleather.dae"
-#define CANDYCANE "C:/Users/markj/Downloads/candycane.dae"
-#define LAMPPOST "C:/Users/markj/Downloads/lampNoGlass.obj"
-#define LAMPLIGHT "C:/Users/markj/Downloads/lampGlass.obj" 
+#define MESH_NAME "Models/snowmanbod.dae"
+#define ARM1_MESH "Models/rightArmSmaller.dae"
+#define ARM2_MESH "Models/leftArmSmaller.dae"
+#define GROUND_PLANE_MESH "Models/snowterrain.dae"
+#define HAT_MESH "Models/hat.dae"
+#define NOSE "Models/carrot.dae"
+#define EYES "Models/eyes.dae"
+#define LEAVES "Models/leaves.dae"
+#define TRUNK "Models/trunk.obj"
+#define REINDEER "Models/reindeerbody.dae"
+#define MAIN_BELL "Models/mainbell.dae"
+#define HARNESS "Models/reindeerleather.dae"
+#define CANDYCANE "Models/candycane.dae"
+#define LAMPPOST "Models/lampNoGlass.obj"
+#define LAMPLIGHT "Models/lampGlass.obj" 
+
 // textures
-#define TERRAIN "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/textures/terrain.jpg"
-#define SNOW_TEX "C:/Users/markj/Downloads/snowTex.jpg"
-#define LEATHER "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/textures/leatherdark.jpg"
-#define BARK "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/textures/tree-bark.jpeg"
-#define CARROT "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/textures/carrot.jpg"
-#define LEAVES_TEX "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/textures/firtree.jpg"
-#define REINDEER_TEX "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/textures/reindeer.jpg"
-#define BELL_TEX "C:/Users/markj/source/repos/compgraphics-lab3/compgraphics-lab3/textures/reindeerbell.jpg"
-#define CANDY_CANE_TEX "C:/Users/markj/Downloads/stripes.jpg"
-#define LAMP_METAL "C:/Users/markj/Downloads/blackmetal.jpg"
-#define LAMP_GLASS "C:/Users/markj/Downloads/yellow.jpg"
-//#define WOOD "C:/Users/markj/Downloads/treeTrunk2.jpg"
-
-#define MAX_PARTICLES 1000
-#define WCX		640
-#define WCY		480
-#define RAIN	0
-#define SNOW	1
-#define	HAIL	2
-
-
-float slowdown = -0.1;
-float velocity = 0.0;
-float zoom = -40.0;
-float pan = 0.0;
-float tilt = 0.0;
-float hailsize = 0.1;
-
-int loop;
-int fall;
-
-//floor colors
-float r = 0.0;
-float g = 1.0;
-float b = 0.0;
-float ground_points[100][100][3];
-float ground_colors[100][100][4];
-float accum = 10.0;
-
-typedef struct {
-	// Life
-	bool alive;	// is the particle alive?
-	float life;	// particle lifespan
-	float fade; // decay
-	// color
-	float red;
-	float green;
-	float blue;
-	// Position/direction
-	float xpos;
-	float ypos;
-	float zpos;
-	// Velocity/Direction, only goes down in y dir
-	float vel;
-	// Gravity
-	float gravity;
-}particles;
-
-// Paticle System
-particles par_sys[MAX_PARTICLES];
+#define TERRAIN "textures/terrain.jpg"
+#define SNOW_TEX "textures/snowTex.jpg"
+#define LEATHER "textures/leatherdark.jpg"
+#define BARK "textures/tree-bark.jpeg"
+#define CARROT "textures/carrot.jpg"
+#define LEAVES_TEX "textures/green_square.jpg"
+#define TRUNKTEX "textures/tree_brown.jpg"
+#define REINDEER_TEX "textures/reindeer.jpg"
+#define BELL_TEX "textures/reindeerbell.jpg"
+#define CANDY_CANE_TEX "textures/stripes.jpg"
+#define LAMP_METAL "textures/blackmetal.jpg"
+#define LAMP_GLASS "textures/yellow.jpg"
 
 /*----------------------------------------------------------------------------
 ----------------------------------------------------------------------------*/
@@ -171,20 +125,10 @@ ModelData lampGlassData;
 // screen size
 int width = 920;
 int height = 690;
+
 //Perspective Transform Variables
 bool keyStates[256];
 bool persp = true;
-
-//Camera camera(vec3(0.0f, 0.0f, 3.0f));
-
-//Shaders
-Shader skyboxShader;
-Shader objectShader;
-GLuint diffuseShaderProgramID, specularShaderProgramID, textureShaderProgramID;
-
-// skybox
-Skybox sky;
-unsigned int skyBoxTextureMap;
 
 // model transform variables
 GLuint loc1[8 * 3];
@@ -193,29 +137,41 @@ GLuint loc3[8 * 3];
 GLuint loc4[8 * 3];
 GLuint loc5[8 * 3]; // SNOWMAN 2
 GLuint loc6[8 * 3]; // SNOWMAN 3
+GLuint loc7[8 * 3]; // SNOWMAN 4
+GLuint loc8[8 * 3]; // SNOWMAN 5
 GLfloat rotate_y = 0.0f;
 GLfloat rotate_y2 = 0.0f;
 GLfloat rotate_y3 = 0.0f;
+GLfloat rotate_y4 = 0.0f;
+GLfloat rotate_y5 = 0.0f;
 GLfloat rotate_x = 0.0f;
 GLfloat rotate_z = 0.0f;
 GLfloat translate_x = 0.0f;
 GLfloat translate_y = 0.0f;
 GLfloat translate_z = 0.0f;
 vec3 translate_base = vec3(0.0f, 0.0f, 0.0f);
+// camera variables
 vec3 cameraPos = vec3(5.0f, 5.5f, 16.0f);
 vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
 vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
 vec3 scaling = vec3(1.0f, 1.0f, 1.0f);
 
+// snowman positions
 float snowmanPos_z = 3.0f;
 vec3 snowmanPos = vec3(7.0f, 0.0f, snowmanPos_z);
 float snowman2Pos_z = -5.0f;
 vec3 snowman2Pos = vec3(12.0f, 0.0f, snowman2Pos_z);
 float snowman3Pos_z = 2.0f;
 vec3 snowman3Pos = vec3(17.0f, 0.0f, snowman3Pos_z);
+float snowman4Pos_z = -3.0f;
+vec3 snowman4Pos = vec3(-3.0f, 0.0f, snowman4Pos_z);
+float snowman5Pos_z = 2.0f;
+vec3 snowman5Pos = vec3(2.0f, 0.0f, snowman5Pos_z);
 
+// rotating reindeer
 GLfloat rotate_reindeer_y = 0.0f;
 
+// object starting positions
 vec3 groundPos = vec3(0.0f, -3.9f, 0.0f);
 vec3 treePos = vec3(5.0f, 0.2f, 2.0f);
 vec3 arm1Pos = vec3(0.0f, 0.0f, 0.0f);
@@ -234,17 +190,28 @@ vec3 canePos = vec3(7.0f, -0.1f, -10.0f);
 vec3 canePos2 = vec3(0.0f, -0.1f, -10.0f);
 vec3 canePos3 = vec3(-7.0f, -0.1f, -10.0f);
 vec3 lampPos = vec3(8.0f, 0.5f, -5.0f);
-// animating the snowman arms
+
+// animating the snowman arms, the hats and the canes
 float armjoint1_z = 0.0f;
 float armjoint2_z = 0.0f;
+float armjoint1_z2 = 0.0f;
+float armjoint2_z2 = 0.0f;
+float armjoint1_z3 = 0.0f;
+float armjoint2_z3 = 0.0f;
+float armjoint1_z4 = 0.0f;
+float armjoint2_z4 = 0.0f;
+float armjoint1_z5 = 0.0f;
+float armjoint2_z5 = 0.0f;
 float arm_wave = 0.0f;
 float hat_y = 0.0f;
 float cane_y = 0.0f;
+
 // textures
 unsigned int terrain_texture;
 unsigned int snow_texture;
 unsigned int leather_texture;
 unsigned int bark_texture;
+unsigned int trunk_texture;
 unsigned int carrot_texture;
 unsigned int leaves_texture;
 unsigned int reindeer_texture;
@@ -254,26 +221,17 @@ unsigned int lampMetal_texture;
 unsigned int lampGlass_texture;
 
 // VBOs and VAO
-unsigned int VP_VBO[40]; // vertex positions
-unsigned int VN_VBO[40]; // vertex normals
-unsigned int VT_VBO[40]; // vertex textures
+unsigned int VP_VBO[60]; // vertex positions
+unsigned int VN_VBO[60]; // vertex normals
+unsigned int VT_VBO[60]; // vertex textures
 unsigned int VAO[3];
-unsigned int terrainVAO, terrainVBO, terrainIBO;
-
-int w, h, nrChannels;
-int numStrips;
-int numTrisPerStrip;
-
-unsigned int skyboxVAO, skyboxVBO;
-unsigned int cubemapTexture;
-
-//unsigned int loadCubemap(vector<std::string> faces);
 
 #pragma region MESH LOADING
 /*----------------------------------------------------------------------------
 MESH LOADING FUNCTION
 ----------------------------------------------------------------------------*/
 
+// loading in meshes (models)
 ModelData load_mesh(const char* file_name) {
 	ModelData modelData;
 
@@ -383,6 +341,7 @@ char* readShaderSource(const char* shaderFile) {
 	return buf;
 }
 
+// adding a shader
 static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
 {
 	// create a shader object
@@ -416,6 +375,7 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
 	glAttachShader(ShaderProgram, ShaderObj);
 }
 
+// compiling shaders
 GLuint CompileShaders()
 {
 	//Start the process of setting up our shaders by creating a program ID
@@ -483,7 +443,6 @@ void generateObjectBufferMesh() {
 	hatData = load_mesh(HAT_MESH);
 	carrotData = load_mesh(NOSE);
 	eyesData = load_mesh(EYES);
-	treeData = load_mesh(FIR);
 	leavesData = load_mesh(LEAVES);
 	trunkData = load_mesh(TRUNK);
 	reindeerData = load_mesh(REINDEER);
@@ -492,6 +451,7 @@ void generateObjectBufferMesh() {
 	caneData = load_mesh(CANDYCANE);
 	lampData = load_mesh(LAMPPOST);
 	lampGlassData = load_mesh(LAMPLIGHT);
+
 	// load textures
 	terrain_texture = load_tex(TERRAIN);
 	snow_texture = load_tex(SNOW_TEX);
@@ -499,86 +459,20 @@ void generateObjectBufferMesh() {
 	bark_texture = load_tex(BARK);
 	carrot_texture = load_tex(CARROT);
 	leaves_texture = load_tex(LEAVES_TEX);
+	trunk_texture = load_tex(TRUNKTEX);
 	reindeer_texture = load_tex(REINDEER_TEX);
 	bell_texture = load_tex(BELL_TEX);
 	cane_texture = load_tex(CANDY_CANE_TEX);
 	lampMetal_texture = load_tex(LAMP_METAL);
 	lampGlass_texture = load_tex(LAMP_GLASS);
 
-	//height map
-	/*unsigned char* data = stbi_load("C:/Users/markj/Downloads/iceland_heightmap.png", &w, &h, &nrChannels, 0);
-	if (data)
-	{
-		std::cout << "Loaded heightmap of size " << h << " x " << w << std::endl;
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
-
-	// set up vertex data (and buffer(s)) and configure vertex attributes
-	// ------------------------------------------------------------------
-	std::vector<float> vertices;
-	float yScale = 64.0f / 256.0f, yShift = 16.0f;
-	int rez = 1;
-	unsigned bytePerPixel = nrChannels;
-	for (int i = 0; i < h; i++)
-	{
-		for (int j = 0; j < w; j++)
-		{
-			unsigned char* pixelOffset = data + (j + w * i) * bytePerPixel;
-			unsigned char y = pixelOffset[0];
-
-			// vertex
-			vertices.push_back(-h / 2.0f + h * i / (float)h);   // vx
-			vertices.push_back((int)y * yScale - yShift);   // vy
-			vertices.push_back(-w / 2.0f + w * j / (float)w);   // vz
-		}
-	}
-	std::cout << "Loaded " << vertices.size() / 3 << " vertices" << std::endl;
-	stbi_image_free(data);
-
-	std::vector<unsigned> indices;
-	for (unsigned i = 0; i < h - 1; i += rez)
-	{
-		for (unsigned j = 0; j < w; j += rez)
-		{
-			for (unsigned k = 0; k < 2; k++)
-			{
-				indices.push_back(j + w * (i + k * rez));
-			}
-		}
-	}
-	std::cout << "Loaded " << indices.size() << " indices" << std::endl;
-
-	numStrips = (h - 1) / rez;
-	numTrisPerStrip = (w / rez) * 2 - 2;
-	std::cout << "Created lattice of " << numStrips << " strips with " << numTrisPerStrip << " triangles each" << std::endl;
-	std::cout << "Created " << numStrips * numTrisPerStrip << " triangles total" << std::endl;*/
-
-	// first, configure the cube's VAO (and terrainVBO + terrainIBO)
-	/*glGenVertexArrays(1, &terrainVAO);
-	glBindVertexArray(terrainVAO);
-
-	glGenBuffers(1, &terrainVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, terrainVBO);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
-
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glGenBuffers(1, &terrainIBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, terrainIBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), &indices[0], GL_STATIC_DRAW);*/
-
 	// generate the buffers
-	glGenBuffers(40, VP_VBO);
-	glGenBuffers(40, VN_VBO);
-	glGenBuffers(40, VT_VBO);
+	glGenBuffers(60, VP_VBO);
+	glGenBuffers(60, VN_VBO);
+	glGenBuffers(60, VT_VBO);
 
 	// SNOWMAN 1!!!!!!!!!
-	// main root object - snowman
+	// main body of snowman
 	loc1[0] = glGetAttribLocation(shaderProgramID, "vertex_position");
 	loc1[1] = glGetAttribLocation(shaderProgramID, "vertex_normal");
 	loc1[2] = glGetAttribLocation(shaderProgramID, "vertex_texture");
@@ -640,7 +534,7 @@ void generateObjectBufferMesh() {
 	glBufferData(GL_ARRAY_BUFFER, eyesData.mPointCount * sizeof(vec2), &eyesData.mTextureCoords[0], GL_STATIC_DRAW);
 
 	// SNOWMAN 2!!!!!!!!!
-	// main root object - snowman
+	// main body of snowman
 	loc5[0] = glGetAttribLocation(shaderProgramID, "vertex_position");
 	loc5[1] = glGetAttribLocation(shaderProgramID, "vertex_normal");
 	loc5[2] = glGetAttribLocation(shaderProgramID, "vertex_texture");
@@ -763,7 +657,131 @@ void generateObjectBufferMesh() {
 	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[35]);
 	glBufferData(GL_ARRAY_BUFFER, eyesData.mPointCount * sizeof(vec2), &eyesData.mTextureCoords[0], GL_STATIC_DRAW);
 
-	// REINDEER BODY
+	// SNOWMAN 4!!!!!!!!!
+	// main body of snowman
+	loc7[0] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc7[1] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc7[2] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[45]);
+	glBufferData(GL_ARRAY_BUFFER, mesh_data.mPointCount * sizeof(vec3), &mesh_data.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[45]);
+	glBufferData(GL_ARRAY_BUFFER, mesh_data.mPointCount * sizeof(vec3), &mesh_data.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[45]);
+	glBufferData(GL_ARRAY_BUFFER, mesh_data.mPointCount * sizeof(vec2), &mesh_data.mTextureCoords[0], GL_STATIC_DRAW);
+	// arm 1
+	loc7[3] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc7[4] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc7[5] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[46]);
+	glBufferData(GL_ARRAY_BUFFER, arm1Data.mPointCount * sizeof(vec3), &arm1Data.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[46]);
+	glBufferData(GL_ARRAY_BUFFER, arm1Data.mPointCount * sizeof(vec3), &arm1Data.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[46]);
+	glBufferData(GL_ARRAY_BUFFER, arm1Data.mPointCount * sizeof(vec2), &arm1Data.mTextureCoords[0], GL_STATIC_DRAW);
+	// hat
+	loc7[6] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc7[7] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc7[8] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[47]);
+	glBufferData(GL_ARRAY_BUFFER, hatData.mPointCount * sizeof(vec3), &hatData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[47]);
+	glBufferData(GL_ARRAY_BUFFER, hatData.mPointCount * sizeof(vec3), &hatData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[47]);
+	glBufferData(GL_ARRAY_BUFFER, hatData.mPointCount * sizeof(vec2), &hatData.mTextureCoords[0], GL_STATIC_DRAW);
+	// arm 2
+	loc7[12] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc7[13] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc7[14] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[48]);
+	glBufferData(GL_ARRAY_BUFFER, arm2Data.mPointCount * sizeof(vec3), &arm2Data.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[48]);
+	glBufferData(GL_ARRAY_BUFFER, arm2Data.mPointCount * sizeof(vec3), &arm2Data.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[48]);
+	glBufferData(GL_ARRAY_BUFFER, arm2Data.mPointCount * sizeof(vec2), &arm2Data.mTextureCoords[0], GL_STATIC_DRAW);
+	// carrot
+	loc7[9] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc7[10] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc7[11] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[49]);
+	glBufferData(GL_ARRAY_BUFFER, carrotData.mPointCount * sizeof(vec3), &carrotData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[49]);
+	glBufferData(GL_ARRAY_BUFFER, carrotData.mPointCount * sizeof(vec3), &carrotData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[49]);
+	glBufferData(GL_ARRAY_BUFFER, carrotData.mPointCount * sizeof(vec2), &carrotData.mTextureCoords[0], GL_STATIC_DRAW);
+	//eyes
+	loc7[15] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc7[16] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc7[17] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[50]);
+	glBufferData(GL_ARRAY_BUFFER, eyesData.mPointCount * sizeof(vec3), &eyesData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[50]);
+	glBufferData(GL_ARRAY_BUFFER, eyesData.mPointCount * sizeof(vec3), &eyesData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[50]);
+	glBufferData(GL_ARRAY_BUFFER, eyesData.mPointCount * sizeof(vec2), &eyesData.mTextureCoords[0], GL_STATIC_DRAW);
+
+	// SNOWMAN 5!!!!!!!!!
+	// main body of snowman
+	loc8[0] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc8[1] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc8[2] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[51]);
+	glBufferData(GL_ARRAY_BUFFER, mesh_data.mPointCount * sizeof(vec3), &mesh_data.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[51]);
+	glBufferData(GL_ARRAY_BUFFER, mesh_data.mPointCount * sizeof(vec3), &mesh_data.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[51]);
+	glBufferData(GL_ARRAY_BUFFER, mesh_data.mPointCount * sizeof(vec2), &mesh_data.mTextureCoords[0], GL_STATIC_DRAW);
+	// arm 1
+	loc8[3] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc8[4] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc8[5] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[52]);
+	glBufferData(GL_ARRAY_BUFFER, arm1Data.mPointCount * sizeof(vec3), &arm1Data.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[52]);
+	glBufferData(GL_ARRAY_BUFFER, arm1Data.mPointCount * sizeof(vec3), &arm1Data.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[52]);
+	glBufferData(GL_ARRAY_BUFFER, arm1Data.mPointCount * sizeof(vec2), &arm1Data.mTextureCoords[0], GL_STATIC_DRAW);
+	// hat
+	loc8[6] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc8[7] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc8[8] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[53]);
+	glBufferData(GL_ARRAY_BUFFER, hatData.mPointCount * sizeof(vec3), &hatData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[53]);
+	glBufferData(GL_ARRAY_BUFFER, hatData.mPointCount * sizeof(vec3), &hatData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[53]);
+	glBufferData(GL_ARRAY_BUFFER, hatData.mPointCount * sizeof(vec2), &hatData.mTextureCoords[0], GL_STATIC_DRAW);
+	// arm 2
+	loc8[12] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc8[13] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc8[14] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[54]);
+	glBufferData(GL_ARRAY_BUFFER, arm2Data.mPointCount * sizeof(vec3), &arm2Data.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[54]);
+	glBufferData(GL_ARRAY_BUFFER, arm2Data.mPointCount * sizeof(vec3), &arm2Data.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[54]);
+	glBufferData(GL_ARRAY_BUFFER, arm2Data.mPointCount * sizeof(vec2), &arm2Data.mTextureCoords[0], GL_STATIC_DRAW);
+	// carrot
+	loc8[9] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc8[10] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc8[11] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[55]);
+	glBufferData(GL_ARRAY_BUFFER, carrotData.mPointCount * sizeof(vec3), &carrotData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[55]);
+	glBufferData(GL_ARRAY_BUFFER, carrotData.mPointCount * sizeof(vec3), &carrotData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[55]);
+	glBufferData(GL_ARRAY_BUFFER, carrotData.mPointCount * sizeof(vec2), &carrotData.mTextureCoords[0], GL_STATIC_DRAW);
+	//eyes
+	loc8[15] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc8[16] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc8[17] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[56]);
+	glBufferData(GL_ARRAY_BUFFER, eyesData.mPointCount * sizeof(vec3), &eyesData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[56]);
+	glBufferData(GL_ARRAY_BUFFER, eyesData.mPointCount * sizeof(vec3), &eyesData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[56]);
+	glBufferData(GL_ARRAY_BUFFER, eyesData.mPointCount * sizeof(vec2), &eyesData.mTextureCoords[0], GL_STATIC_DRAW);
+
+	// REINDEER BODY 1
 	loc3[9] = glGetAttribLocation(shaderProgramID, "vertex_position");
 	loc3[10] = glGetAttribLocation(shaderProgramID, "vertex_normal");
 	loc3[11] = glGetAttribLocation(shaderProgramID, "vertex_texture");
@@ -894,7 +912,7 @@ void generateObjectBufferMesh() {
 	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[38]);
 	glBufferData(GL_ARRAY_BUFFER, reindeerData.mPointCount * sizeof(vec2), &reindeerData.mTextureCoords[0], GL_STATIC_DRAW);
 
-	// ground -- need to fix texture
+	// terrain
 	loc2[0] = glGetAttribLocation(shaderProgramID, "vertex_position");
 	loc2[1] = glGetAttribLocation(shaderProgramID, "vertex_normal");
 	loc2[2] = glGetAttribLocation(shaderProgramID, "vertex_texture");
@@ -960,181 +978,74 @@ void generateObjectBufferMesh() {
 	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[23]);
 	glBufferData(GL_ARRAY_BUFFER, lampGlassData.mPointCount * sizeof(vec2), &lampGlassData.mTextureCoords[0], GL_STATIC_DRAW);
 
-	/*glGenVertexArrays(1, &terrainVAO);
-	glBindVertexArray(VAO[2]);
+	// LEAVES
+	loc2[18] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc2[19] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc2[20] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[39]);
+	glBufferData(GL_ARRAY_BUFFER, leavesData.mPointCount * sizeof(vec3), &leavesData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[39]);
+	glBufferData(GL_ARRAY_BUFFER, leavesData.mPointCount * sizeof(vec3), &leavesData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[39]);
+	glBufferData(GL_ARRAY_BUFFER, leavesData.mPointCount * sizeof(vec2), &leavesData.mTextureCoords[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &terrainVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[24]);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+	// TRUNK
+	loc2[21] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc2[22] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc2[23] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[40]);
+	glBufferData(GL_ARRAY_BUFFER, trunkData.mPointCount * sizeof(vec3), &trunkData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[40]);
+	glBufferData(GL_ARRAY_BUFFER, trunkData.mPointCount * sizeof(vec3), &trunkData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[40]);
+	glBufferData(GL_ARRAY_BUFFER, trunkData.mPointCount * sizeof(vec2), &trunkData.mTextureCoords[0], GL_STATIC_DRAW); 
 
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
+	// LEAVES
+	loc1[18] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc1[19] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc1[20] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[41]);
+	glBufferData(GL_ARRAY_BUFFER, leavesData.mPointCount * sizeof(vec3), &leavesData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[41]);
+	glBufferData(GL_ARRAY_BUFFER, leavesData.mPointCount * sizeof(vec3), &leavesData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[41]);
+	glBufferData(GL_ARRAY_BUFFER, leavesData.mPointCount * sizeof(vec2), &leavesData.mTextureCoords[0], GL_STATIC_DRAW);
 
-	glGenBuffers(1, &terrainIBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VN_VBO[24]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned), &indices[0], GL_STATIC_DRAW);*/
+	// TRUNK
+	loc1[21] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc1[22] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc1[23] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[42]);
+	glBufferData(GL_ARRAY_BUFFER, trunkData.mPointCount * sizeof(vec3), &trunkData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[42]);
+	glBufferData(GL_ARRAY_BUFFER, trunkData.mPointCount * sizeof(vec3), &trunkData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[42]);
+	glBufferData(GL_ARRAY_BUFFER, trunkData.mPointCount * sizeof(vec2), &trunkData.mTextureCoords[0], GL_STATIC_DRAW);
+
+	// LEAVES
+	loc5[18] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc5[19] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc5[20] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[43]);
+	glBufferData(GL_ARRAY_BUFFER, leavesData.mPointCount * sizeof(vec3), &leavesData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[43]);
+	glBufferData(GL_ARRAY_BUFFER, leavesData.mPointCount * sizeof(vec3), &leavesData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[43]);
+	glBufferData(GL_ARRAY_BUFFER, leavesData.mPointCount * sizeof(vec2), &leavesData.mTextureCoords[0], GL_STATIC_DRAW);
+
+	// TRUNK
+	loc5[21] = glGetAttribLocation(shaderProgramID, "vertex_position");
+	loc5[22] = glGetAttribLocation(shaderProgramID, "vertex_normal");
+	loc5[23] = glGetAttribLocation(shaderProgramID, "vertex_texture");
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[44]);
+	glBufferData(GL_ARRAY_BUFFER, trunkData.mPointCount * sizeof(vec3), &trunkData.mVertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[44]);
+	glBufferData(GL_ARRAY_BUFFER, trunkData.mPointCount * sizeof(vec3), &trunkData.mNormals[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[44]);
+	glBufferData(GL_ARRAY_BUFFER, trunkData.mPointCount * sizeof(vec2), &trunkData.mTextureCoords[0], GL_STATIC_DRAW);
 
 }
 #pragma endregion VBO_FUNCTIONS
-
-
-unsigned int loadSkyTexture()
-{
-	std::string faces[] =
-	{
-		"C:/Users/markj/Downloads/skybox/skybox/right.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/left.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/top.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/bottom.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/front.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/back.jpg"
-	};
-
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-	int width, height, nrChannels;
-	for (unsigned int i = 0; i < 6; i++)
-	{
-		unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
-		if (data)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			stbi_image_free(data);
-		}
-		else
-		{
-			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-			stbi_image_free(data);
-		}
-	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	return textureID;
-
-}
-
-void setUpSkyBox() {
-	stbi_set_flip_vertically_on_load(false);
-	//set up skybox 
-	sky = Skybox();
-	sky.genSkybox();
-	skyBoxTextureMap = loadSkyTexture();
-	skyboxShader.use();
-	skyboxShader.setInt("skybox", 0);
-	objectShader.use();
-	stbi_set_flip_vertically_on_load(true);
-}
-void setupShaders() {
-	objectShader = Shader("Shaders/OriginalVertexShader.txt", "Shaders/OriginalFragmentShader.txt");
-	skyboxShader = Shader("Shaders/skyBox.vs", "Shaders/skyBox.fs");
-}
-
-// load textures
-   // -------------
-	/*vector<std::string> faces
-	{
-		"C:/Users/markj/Downloads/skybox/skybox/right.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/left.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/top.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/bottom.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/front.jpg",
-		"C:/Users/markj/Downloads/skybox/skybox/back.jpg"
-	};*/
-	//cubemapTexture = loadCubemap(faces);
-
-void initParticles(int i) {
-	par_sys[i].alive = true;
-	par_sys[i].life = 5.0;
-	par_sys[i].fade = 0.1;
-
-	par_sys[i].xpos = (rand() % 2);
-	par_sys[i].ypos = 30.0;
-	par_sys[i].zpos = (float)(rand() % 2);
-
-	par_sys[i].red = 1.0;
-	par_sys[i].green = 1.0;
-	par_sys[i].blue = 1.0;
-
-	par_sys[i].vel = velocity;
-	par_sys[i].gravity = -0.1;
-
-}
-
-void drawSnow() {
-	float x, y, z;
-	for (int i = 0; i < 100; i++) {
-		glPushMatrix();
-		glColor3f(1.0, 1.0, 1.0);
-		glTranslatef(10.0f, 10.0f, 10.0f);
-		glutSolidSphere(2.0, 16, 16);
-		glPopMatrix();
-	}
-	/*for (loop = 0; loop < MAX_PARTICLES; loop = loop + 2) {
-		if (par_sys[loop].alive == true) {
-			x = par_sys[loop].xpos;
-			y = par_sys[loop].ypos;
-			z = par_sys[loop].zpos + zoom;
-
-			// Draw particles
-			glPushMatrix();
-			glColor3f(1.0, 1.0, 1.0);
-			glTranslatef(x, y, z);
-			glutSolidSphere(2.0, 16, 16);
-			glPopMatrix();
-
-			glPushMatrix();
-			glColor3f(1.0, 1.0, 1.0);
-			glTranslatef(x, y+10, z);
-			glutSolidSphere(2.0, 16, 16);
-			glPopMatrix();
-
-			if (par_sys[loop].ypos > -4.0f && snowBack == false) {
-				printf("LOOP 1: %f\n", par_sys[loop].ypos);
-				par_sys[loop].ypos = par_sys[loop].ypos - 0.15f;
-			}
-			else {
-				snowBack = true;
-				par_sys[loop].ypos += 0.15f;
-				printf("LOOP 2: %f\n", par_sys[loop].ypos);
-				if (par_sys[loop].ypos > 8.0f) {
-					printf("LOOP 3: %f\n", par_sys[loop].ypos);
-					snowBack = false;
-				}
-			}
-			// Update values
-			//Move
-			/*par_sys[loop].ypos -= par_sys[loop].vel / slowdown;
-			printf("VELOCITY: %f\n", par_sys[loop].ypos);
-			par_sys[loop].vel += par_sys[loop].gravity;
-			// Decay
-			par_sys[loop].life -= par_sys[loop].fade;*/
-
-			/*if (par_sys[loop].ypos <= -10) {
-				int zi = z - zoom + 10;
-				int xi = x + 10;
-				ground_colors[zi][xi][0] = 1.0;
-				ground_colors[zi][xi][2] = 1.0;
-				ground_colors[zi][xi][3] += 1.0;
-				if (ground_colors[zi][xi][3] > 1.0) {
-					ground_points[xi][zi][1] += 0.1;
-				}
-				par_sys[loop].life = -1.0;
-			}
-
-			//Revive
-			if (par_sys[loop].life < 0.0) {
-				initParticles(loop);
-			}
-		}
-	}*/
-}
 
 void display() {
 
@@ -1158,7 +1069,7 @@ void display() {
 	GLuint diffuse_location = glGetUniformLocation(shaderProgramID, "material.diffuse");
 	GLuint specular_location = glGetUniformLocation(shaderProgramID, "material.specular");
 	GLuint shininess_location = glGetUniformLocation(shaderProgramID, "material.shininess");
-
+	// camera position
 	GLuint camPos = glGetUniformLocation(shaderProgramID, "viewPos");
 	glUniform3fv(camPos, 1, cameraPos.v);
 	// set up the lights
@@ -1200,7 +1111,7 @@ void display() {
 	glUniform1f(light1_constant, lightConstant);
 	glUniform1f(light1_linear, lightLinear);
 	glUniform1f(light1_quadratic, lightQuadratic);
-
+	// LIGHT 2
 	GLuint light2_location = glGetUniformLocation(shaderProgramID, "pointLights[2].position");
 	GLuint light2_ambient = glGetUniformLocation(shaderProgramID, "pointLights[2].ambient");
 	GLuint light2_diffuse = glGetUniformLocation(shaderProgramID, "pointLights[2].diffuse");
@@ -1216,7 +1127,6 @@ void display() {
 	glUniform1f(light2_constant, lightConstant);
 	glUniform1f(light2_linear, lightLinear);
 	glUniform1f(light2_quadratic, lightQuadratic);
-	//GLuint light1_location = glGetUniformLocation(shaderProgramID, "Light[1].position");
 
 	// Root of the Hierarchy
 	mat4 projection = perspective(fov, (float)width / (float)height, 0.1f, 1000.0f);
@@ -1230,7 +1140,7 @@ void display() {
 	glUniformMatrix4fv(proj_mat_location, 1, GL_FALSE, projection.m);
 	glUniformMatrix4fv(view_mat_location, 1, GL_FALSE, view.m);
 
-	// translating, rotating and scaling the main model
+	// translating, rotating and scaling the SNOWMAN 1
 	mat4 model = identity_mat4();
 	model = translate(model, translate_base);
 	model = rotate_z_deg(model, rotate_z);
@@ -1417,7 +1327,7 @@ void display() {
 
 	// child -- hierarchical arms - arm1
 	mat4 modelChild2Arm1 = identity_mat4();
-	modelChild2Arm1 = rotate_z_deg(modelChild2Arm1, armjoint1_z);
+	modelChild2Arm1 = rotate_z_deg(modelChild2Arm1, armjoint1_z2);
 	modelChild2Arm1 = rotate_y_deg(modelChild2Arm1, 0.0f);
 	modelChild2Arm1 = rotate_x_deg(modelChild2Arm1, 0.0f);
 	modelChild2Arm1 = translate(modelChild2Arm1, arm1Pos);
@@ -1438,7 +1348,7 @@ void display() {
 
 	// child -- hierarchical arms - arm2
 	mat4 modelChild2Arm2 = identity_mat4();
-	modelChild2Arm2 = rotate_z_deg(modelChild2Arm2, armjoint2_z);
+	modelChild2Arm2 = rotate_z_deg(modelChild2Arm2, armjoint2_z2);
 	modelChild2Arm2 = rotate_y_deg(modelChild2Arm2, 0.0f);
 	modelChild2Arm2 = rotate_x_deg(modelChild2Arm2, 0.0f);
 	modelChild2Arm2 = translate(modelChild2Arm2, arm2Pos);
@@ -1566,7 +1476,7 @@ void display() {
 
 	// child -- hierarchical arms - arm1
 	mat4 modelChild3Arm1 = identity_mat4();
-	modelChild3Arm1 = rotate_z_deg(modelChild3Arm1, armjoint1_z);
+	modelChild3Arm1 = rotate_z_deg(modelChild3Arm1, armjoint1_z3);
 	modelChild3Arm1 = rotate_y_deg(modelChild3Arm1, 0.0f);
 	modelChild3Arm1 = rotate_x_deg(modelChild3Arm1, 0.0f);
 	modelChild3Arm1 = translate(modelChild3Arm1, arm1Pos);
@@ -1587,7 +1497,7 @@ void display() {
 
 	// child -- hierarchical arms - arm2
 	mat4 modelChild3Arm2 = identity_mat4();
-	modelChild3Arm2 = rotate_z_deg(modelChild3Arm2, armjoint2_z);
+	modelChild3Arm2 = rotate_z_deg(modelChild3Arm2, armjoint2_z3);
 	modelChild3Arm2 = rotate_y_deg(modelChild3Arm2, 0.0f);
 	modelChild3Arm2 = rotate_x_deg(modelChild3Arm2, 0.0f);
 	modelChild3Arm2 = translate(modelChild3Arm2, arm2Pos);
@@ -1680,6 +1590,304 @@ void display() {
 	glEnableVertexAttribArray(loc6[17]);
 	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[35]);
 	glVertexAttribPointer(loc6[17], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, leather_texture);
+	glDrawArrays(GL_TRIANGLES, 0, eyesData.mPointCount);
+
+	// SNOWMAN 4!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// translating, rotating and scaling the main model
+	mat4 model4 = identity_mat4();
+	model4 = translate(model4, translate_base);
+	model4 = rotate_z_deg(model4, rotate_z);
+	model4 = rotate_y_deg(model4, rotate_y4);
+	model4 = rotate_x_deg(model4, rotate_x);
+	model4 = translate(model4, snowman4Pos);
+	model4 = scale(model4, scaling);
+	//vec3 ambient = vec3(0.9f, 0.9f, 0.9f);
+	diffuse = vec3(1.0f, 1.0f, 1.0f);
+	shininess = 2.0f;
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, model4.m);
+	glEnableVertexAttribArray(loc7[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[45]);
+	glVertexAttribPointer(loc7[0], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc7[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[45]);
+	glVertexAttribPointer(loc7[1], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	// texture - snow
+	glEnableVertexAttribArray(loc7[2]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[45]);
+	glVertexAttribPointer(loc7[2], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, snow_texture);
+	glDrawArrays(GL_TRIANGLES, 0, mesh_data.mPointCount);
+
+	// child -- hierarchical arms - arm1
+	mat4 modelChild4Arm1 = identity_mat4();
+	modelChild4Arm1 = rotate_z_deg(modelChild4Arm1, armjoint1_z4);
+	modelChild4Arm1 = rotate_y_deg(modelChild4Arm1, 0.0f);
+	modelChild4Arm1 = rotate_x_deg(modelChild4Arm1, 0.0f);
+	modelChild4Arm1 = translate(modelChild4Arm1, arm1Pos);
+	modelChild4Arm1 = model4 * modelChild4Arm1;
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelChild4Arm1.m);
+	glEnableVertexAttribArray(loc7[3]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[46]);
+	glVertexAttribPointer(loc7[3], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc7[4]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[46]);
+	glVertexAttribPointer(loc7[4], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc7[5]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[46]);
+	glVertexAttribPointer(loc7[5], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, bark_texture);
+	glDrawArrays(GL_TRIANGLES, 0, arm1Data.mPointCount);
+
+	// child -- hierarchical arms - arm2
+	mat4 modelChild4Arm2 = identity_mat4();
+	modelChild4Arm2 = rotate_z_deg(modelChild4Arm2, armjoint2_z4);
+	modelChild4Arm2 = rotate_y_deg(modelChild4Arm2, 0.0f);
+	modelChild4Arm2 = rotate_x_deg(modelChild4Arm2, 0.0f);
+	modelChild4Arm2 = translate(modelChild4Arm2, arm2Pos);
+	modelChild4Arm2 = model4 * modelChild4Arm2;
+	color = vec3(0.5f, 0.25f, 0.0f);
+	glUniform3fv(color_location, 1, color.v);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelChild4Arm2.m);
+	glEnableVertexAttribArray(loc7[9]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[48]);
+	glVertexAttribPointer(loc7[9], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc7[10]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[48]);
+	glVertexAttribPointer(loc7[10], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glDrawArrays(GL_TRIANGLES, 0, arm2Data.mPointCount);
+
+	// hat -- hierarchical
+	mat4 modelHat4 = identity_mat4();
+	modelHat4 = rotate_z_deg(modelHat4, 0.0f);
+	modelHat4 = rotate_y_deg(modelHat4, hat_y);
+	modelHat4 = rotate_x_deg(modelHat4, 0.0f);
+	modelHat4 = translate(modelHat4, vec3(0.0f, 0.0f, 0.0f));
+	modelHat4 = model4 * modelHat4;
+	//ambient = vec3(0.8f, 0.8f, 0.8f);
+	diffuse = vec3(0.51f, 0.51f, 0.51f);
+	specular = vec3(0.5f, 0.5f, 0.5f);
+	shininess = 40.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelHat4.m);
+	glEnableVertexAttribArray(loc7[6]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[47]);
+	glVertexAttribPointer(loc7[6], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc7[7]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[47]);
+	glVertexAttribPointer(loc7[7], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc7[8]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[47]);
+	glVertexAttribPointer(loc7[8], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, leather_texture);
+	glDrawArrays(GL_TRIANGLES, 0, hatData.mPointCount);
+
+	// carrot
+	mat4 modelCarrot4 = identity_mat4();
+	modelCarrot4 = model4 * modelCarrot4;
+	//ambient = vec3(0.8f, 0.8f, 0.8f);
+	diffuse = vec3(0.4f, 0.4f, 0.4f);
+	specular = vec3(1.0f, 1.0f, 1.0f);
+	shininess = 100.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelCarrot4.m);
+	glEnableVertexAttribArray(loc7[12]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[49]);
+	glVertexAttribPointer(loc7[12], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc7[13]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[49]);
+	glVertexAttribPointer(loc7[13], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc7[14]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[49]);
+	glVertexAttribPointer(loc7[14], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, carrot_texture);
+	glDrawArrays(GL_TRIANGLES, 0, carrotData.mPointCount);
+
+	// eyes
+	mat4 modelEyes4 = identity_mat4();
+	modelEyes4 = model4 * modelEyes4;
+	//ambient = vec3(0.05f, 0.05f, 0.06f);
+	diffuse = vec3(0.18f, 0.17f, 0.225f);
+	specular = vec3(0.99f, 0.99f, 0.99f);
+	shininess = 100.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelEyes4.m);
+	glEnableVertexAttribArray(loc7[15]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[50]);
+	glVertexAttribPointer(loc7[15], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc7[16]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[50]);
+	glVertexAttribPointer(loc7[16], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc7[17]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[50]);
+	glVertexAttribPointer(loc7[17], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, leather_texture);
+	glDrawArrays(GL_TRIANGLES, 0, eyesData.mPointCount);
+
+	// SNOWMAN 5!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// translating, rotating and scaling the main model
+	mat4 model5 = identity_mat4();
+	model5 = translate(model5, translate_base);
+	model5 = rotate_z_deg(model5, rotate_z);
+	model5 = rotate_y_deg(model5, rotate_y5);
+	model5 = rotate_x_deg(model5, rotate_x);
+	model5 = translate(model5, snowman5Pos);
+	model5 = scale(model5, scaling);
+	//vec3 ambient = vec3(0.9f, 0.9f, 0.9f);
+	diffuse = vec3(1.0f, 1.0f, 1.0f);
+	shininess = 2.0f;
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, model5.m);
+	glEnableVertexAttribArray(loc8[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[51]);
+	glVertexAttribPointer(loc8[0], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc8[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[51]);
+	glVertexAttribPointer(loc8[1], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	// texture - snow
+	glEnableVertexAttribArray(loc8[2]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[51]);
+	glVertexAttribPointer(loc8[2], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, snow_texture);
+	glDrawArrays(GL_TRIANGLES, 0, mesh_data.mPointCount);
+
+	// child -- hierarchical arms - arm1
+	mat4 modelChild5Arm1 = identity_mat4();
+	modelChild5Arm1 = rotate_z_deg(modelChild5Arm1, armjoint1_z5);
+	modelChild5Arm1 = rotate_y_deg(modelChild5Arm1, 0.0f);
+	modelChild5Arm1 = rotate_x_deg(modelChild5Arm1, 0.0f);
+	modelChild5Arm1 = translate(modelChild5Arm1, arm1Pos);
+	modelChild5Arm1 = model5 * modelChild5Arm1;
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelChild5Arm1.m);
+	glEnableVertexAttribArray(loc8[3]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[52]);
+	glVertexAttribPointer(loc8[3], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc8[4]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[52]);
+	glVertexAttribPointer(loc8[4], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc8[5]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[52]);
+	glVertexAttribPointer(loc8[5], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, bark_texture);
+	glDrawArrays(GL_TRIANGLES, 0, arm1Data.mPointCount);
+
+	// child -- hierarchical arms - arm2
+	mat4 modelChild5Arm2 = identity_mat4();
+	modelChild5Arm2 = rotate_z_deg(modelChild5Arm2, armjoint2_z5);
+	modelChild5Arm2 = rotate_y_deg(modelChild5Arm2, 0.0f);
+	modelChild5Arm2 = rotate_x_deg(modelChild5Arm2, 0.0f);
+	modelChild5Arm2 = translate(modelChild5Arm2, arm2Pos);
+	modelChild5Arm2 = model5 * modelChild5Arm2;
+	color = vec3(0.5f, 0.25f, 0.0f);
+	glUniform3fv(color_location, 1, color.v);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelChild5Arm2.m);
+	glEnableVertexAttribArray(loc8[9]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[54]);
+	glVertexAttribPointer(loc8[9], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc8[10]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[54]);
+	glVertexAttribPointer(loc8[10], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glDrawArrays(GL_TRIANGLES, 0, arm2Data.mPointCount);
+
+	// hat -- hierarchical
+	mat4 modelHat5 = identity_mat4();
+	modelHat5 = rotate_z_deg(modelHat5, 0.0f);
+	modelHat5 = rotate_y_deg(modelHat5, hat_y);
+	modelHat5 = rotate_x_deg(modelHat5, 0.0f);
+	modelHat5 = translate(modelHat5, vec3(0.0f, 0.0f, 0.0f));
+	modelHat5 = model5 * modelHat5;
+	//ambient = vec3(0.8f, 0.8f, 0.8f);
+	diffuse = vec3(0.51f, 0.51f, 0.51f);
+	specular = vec3(0.5f, 0.5f, 0.5f);
+	shininess = 40.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelHat5.m);
+	glEnableVertexAttribArray(loc8[6]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[53]);
+	glVertexAttribPointer(loc8[6], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc8[7]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[53]);
+	glVertexAttribPointer(loc8[7], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc8[8]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[53]);
+	glVertexAttribPointer(loc8[8], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, leather_texture);
+	glDrawArrays(GL_TRIANGLES, 0, hatData.mPointCount);
+
+	// carrot
+	mat4 modelCarrot5 = identity_mat4();
+	modelCarrot5 = model5 * modelCarrot5;
+	//ambient = vec3(0.8f, 0.8f, 0.8f);
+	diffuse = vec3(0.4f, 0.4f, 0.4f);
+	specular = vec3(1.0f, 1.0f, 1.0f);
+	shininess = 100.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelCarrot5.m);
+	glEnableVertexAttribArray(loc8[12]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[55]);
+	glVertexAttribPointer(loc8[12], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc8[13]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[55]);
+	glVertexAttribPointer(loc8[13], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc8[14]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[55]);
+	glVertexAttribPointer(loc8[14], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, carrot_texture);
+	glDrawArrays(GL_TRIANGLES, 0, carrotData.mPointCount);
+
+	// eyes
+	mat4 modelEyes5 = identity_mat4();
+	modelEyes5 = model5 * modelEyes5;
+	//ambient = vec3(0.05f, 0.05f, 0.06f);
+	diffuse = vec3(0.18f, 0.17f, 0.225f);
+	specular = vec3(0.99f, 0.99f, 0.99f);
+	shininess = 100.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, modelEyes5.m);
+	glEnableVertexAttribArray(loc8[15]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[56]);
+	glVertexAttribPointer(loc8[15], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc8[16]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[56]);
+	glVertexAttribPointer(loc8[16], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[0]);
+	glEnableVertexAttribArray(loc8[17]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[56]);
+	glVertexAttribPointer(loc8[17], 2, GL_FLOAT, GL_FALSE, 0, NULL);
 	glBindTexture(GL_TEXTURE_2D, leather_texture);
 	glDrawArrays(GL_TRIANGLES, 0, eyesData.mPointCount);
 
@@ -1927,6 +2135,173 @@ void display() {
 	glBindTexture(GL_TEXTURE_2D, terrain_texture);
 	glDrawArrays(GL_TRIANGLES, 0, groundData.mPointCount);
 
+	// leaves model
+	mat4 leavesModel = identity_mat4();
+	leavesModel = scale(leavesModel, vec3(3.0f, 3.0f, 3.0f));
+	leavesModel = translate(leavesModel, vec3(30.0f, 0.0f, 0.0f));
+	color = vec3(0.0f, 0.7f, 0.0f);
+	glUniform3fv(color_location, 1, color.v);
+	//ambient = vec3(1.0f, 1.0f, 1.0f);
+	diffuse = vec3(1.0f, 1.0f, 1.0f);
+	specular = vec3(0.2f, 0.2f, 0.2f);
+	shininess = 50.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, leavesModel.m);
+	glEnableVertexAttribArray(loc2[18]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[39]);
+	glVertexAttribPointer(loc2[18], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc2[19]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[39]);
+	glVertexAttribPointer(loc2[19], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[1]);
+	glEnableVertexAttribArray(loc2[20]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[39]);
+	glVertexAttribPointer(loc2[20], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, leaves_texture);
+	glDrawArrays(GL_TRIANGLES, 0, leavesData.mPointCount);
+
+	// tree model
+	mat4 treeModel = identity_mat4();
+	treeModel = scale(treeModel, vec3(3.0f, 3.0f, 3.0f));
+	treeModel = translate(treeModel, vec3(30.0f, 0.0f, 0.0f));
+	color = vec3(0.0f, 0.7f, 0.0f);
+	glUniform3fv(color_location, 1, color.v);
+	//ambient = vec3(1.0f, 1.0f, 1.0f);
+	diffuse = vec3(1.0f, 1.0f, 1.0f);
+	specular = vec3(0.2f, 0.2f, 0.2f);
+	shininess = 50.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, treeModel.m);
+	glEnableVertexAttribArray(loc2[21]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[40]);
+	glVertexAttribPointer(loc2[21], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc2[22]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[40]);
+	glVertexAttribPointer(loc2[22], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[1]);
+	glEnableVertexAttribArray(loc2[23]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[40]);
+	glVertexAttribPointer(loc2[23], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, trunk_texture);
+	glDrawArrays(GL_TRIANGLES, 0, trunkData.mPointCount); 
+
+	// leaves model
+	mat4 leavesModel2 = identity_mat4();
+	leavesModel2 = scale(leavesModel2, vec3(3.0f, 3.0f, 3.0f));
+	leavesModel2 = translate(leavesModel2, vec3(26.0f, 0.0f, 2.0f));
+	color = vec3(0.0f, 0.7f, 0.0f);
+	glUniform3fv(color_location, 1, color.v);
+	//ambient = vec3(1.0f, 1.0f, 1.0f);
+	diffuse = vec3(1.0f, 1.0f, 1.0f);
+	specular = vec3(0.2f, 0.2f, 0.2f);
+	shininess = 50.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, leavesModel2.m);
+	glEnableVertexAttribArray(loc1[18]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[41]);
+	glVertexAttribPointer(loc1[18], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc1[19]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[41]);
+	glVertexAttribPointer(loc1[19], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[1]);
+	glEnableVertexAttribArray(loc1[20]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[41]);
+	glVertexAttribPointer(loc1[20], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, leaves_texture);
+	glDrawArrays(GL_TRIANGLES, 0, leavesData.mPointCount);
+
+	// tree model
+	mat4 treeModel2 = identity_mat4();
+	treeModel2 = scale(treeModel2, vec3(3.0f, 3.0f, 3.0f));
+	treeModel2 = translate(treeModel2, vec3(26.0f, 0.0f, 2.0f));
+	color = vec3(0.0f, 0.7f, 0.0f);
+	glUniform3fv(color_location, 1, color.v);
+	//ambient = vec3(1.0f, 1.0f, 1.0f);
+	diffuse = vec3(1.0f, 1.0f, 1.0f);
+	specular = vec3(0.2f, 0.2f, 0.2f);
+	shininess = 50.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, treeModel2.m);
+	glEnableVertexAttribArray(loc1[21]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[42]);
+	glVertexAttribPointer(loc1[21], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc1[22]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[42]);
+	glVertexAttribPointer(loc1[22], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[1]);
+	glEnableVertexAttribArray(loc1[23]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[42]);
+	glVertexAttribPointer(loc1[23], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, trunk_texture);
+	glDrawArrays(GL_TRIANGLES, 0, trunkData.mPointCount);
+
+	// leaves model
+	mat4 leavesModel3 = identity_mat4();
+	leavesModel3 = scale(leavesModel3, vec3(3.0f, 3.0f, 3.0f));
+	leavesModel3 = translate(leavesModel3, vec3(24.0f, 0.0f, -5.0f));
+	color = vec3(0.0f, 0.7f, 0.0f);
+	glUniform3fv(color_location, 1, color.v);
+	//ambient = vec3(1.0f, 1.0f, 1.0f);
+	diffuse = vec3(1.0f, 1.0f, 1.0f);
+	specular = vec3(0.2f, 0.2f, 0.2f);
+	shininess = 50.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, leavesModel3.m);
+	glEnableVertexAttribArray(loc5[18]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[43]);
+	glVertexAttribPointer(loc5[18], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc5[19]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[43]);
+	glVertexAttribPointer(loc5[19], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[1]);
+	glEnableVertexAttribArray(loc5[20]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[43]);
+	glVertexAttribPointer(loc5[20], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, leaves_texture);
+	glDrawArrays(GL_TRIANGLES, 0, leavesData.mPointCount);
+
+	// tree model
+	mat4 treeModel3 = identity_mat4();
+	treeModel3 = scale(treeModel3, vec3(3.0f, 3.0f, 3.0f));
+	treeModel3 = translate(treeModel3, vec3(24.0f, 0.0f, -5.0f));
+	color = vec3(0.0f, 0.7f, 0.0f);
+	glUniform3fv(color_location, 1, color.v);
+	//ambient = vec3(1.0f, 1.0f, 1.0f);
+	diffuse = vec3(1.0f, 1.0f, 1.0f);
+	specular = vec3(0.2f, 0.2f, 0.2f);
+	shininess = 50.0f;
+	//glUniform3fv(ambient_location, 1, ambient.v);
+	glUniform3fv(diffuse_location, 1, diffuse.v);
+	glUniform3fv(specular_location, 1, specular.v);
+	glUniform1f(shininess_location, shininess);
+	glUniformMatrix4fv(matrix_location, 1, GL_FALSE, treeModel3.m);
+	glEnableVertexAttribArray(loc5[21]);
+	glBindBuffer(GL_ARRAY_BUFFER, VP_VBO[44]);
+	glVertexAttribPointer(loc5[21], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glEnableVertexAttribArray(loc5[22]);
+	glBindBuffer(GL_ARRAY_BUFFER, VN_VBO[44]);
+	glVertexAttribPointer(loc5[22], 3, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindVertexArray(VAO[1]);
+	glEnableVertexAttribArray(loc5[23]);
+	glBindBuffer(GL_ARRAY_BUFFER, VT_VBO[44]);
+	glVertexAttribPointer(loc5[23], 2, GL_FLOAT, GL_FALSE, 0, NULL);
+	glBindTexture(GL_TEXTURE_2D, trunk_texture);
+	glDrawArrays(GL_TRIANGLES, 0, trunkData.mPointCount);
 	// candy cane
 	mat4 cane_model = identity_mat4();
 	cane_model = scale(cane_model, vec3(0.015f, 0.015f, 0.015f));
@@ -2048,63 +2423,11 @@ void display() {
 	glBindTexture(GL_TEXTURE_2D, lampGlass_texture);
 	glDrawArrays(GL_TRIANGLES, 0, lampGlassData.mPointCount);
 
-	/*mat4 terrainModel = identity_mat4();
-	terrainModel = translate(terrainModel, vec3(0.0f, 0.0f, 0.0f));
-
-	// render the cube
-	glBindVertexArray(VAO[2]);
-	glBindTexture(GL_TEXTURE_2D, snow_texture);
-	//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	for (unsigned strip = 0; strip < numStrips; strip++) {
-		glDrawElements(GL_TRIANGLE_STRIP,   // primitive type
-			numTrisPerStrip + 2,   // number of indices to render
-			GL_UNSIGNED_INT,     // index data type
-			(void*)(sizeof(unsigned) * (numTrisPerStrip + 2) * strip)); // offset to starting index
-	}*/
-	//draw skybox 
-	//skyboxShader.use();
-	//glDepthFunc(GL_LEQUAL);
-	//view = identity_mat4();
-	//skyboxShader.setMat4("view", view);
-	//skyboxShader.setMat4("projection", projection);
-	//sky.drawSkyBox(skyboxShader, skyBoxTextureMap);
-
-	// procedural terrain
-	/*int i, j;
-	float x, y, z;
-	glColor3f(r, g, b);
-	glBegin(GL_QUADS);
-	// along z - y const
-	for (i = -10; i + 1 < 90; i++) {
-		// along x - y const
-		for (j = -10; j + 1 < 90; j++) {
-			glColor3fv(ground_colors[i + 10][j + 10]);
-			glVertex3f(ground_points[j + 10][i + 10][0],
-				ground_points[j + 10][i + 10][1]-10,
-				ground_points[j + 10][i + 10][2]);
-			glColor3fv(ground_colors[i + 10][j + 1 + 10]);
-			glVertex3f(ground_points[j + 1 + 10][i + 10][0],
-				ground_points[j + 1 + 10][i + 10][1]-10,
-				ground_points[j + 1 + 10][i + 10][2]);
-			glColor3fv(ground_colors[i + 1 + 10][j + 1 + 10]);
-			glVertex3f(ground_points[j + 1 + 10][i + 1 + 10][0],
-				ground_points[j + 1 + 10][i + 1 + 10][1]-10,
-				ground_points[j + 1 + 10][i + 1 + 10][2]);
-			glColor3fv(ground_colors[i + 1 + 10][j + 10]);
-			glVertex3f(ground_points[j + 10][i + 1 + 10][0],
-				ground_points[j + 10][i + 1 + 10][1]-10,
-				ground_points[j + 10][i + 1 + 10][2]);
-		}
-
-	}
-	glEnd();
-	if (fall == SNOW) {
-		drawSnow();
-	}*/
 
 	glutSwapBuffers();
 }
 
+// function to change between perspective and orthographic projection
 void changeProjection() {
 	if (keyStates['p']) {
 		persp = true;
@@ -2114,6 +2437,7 @@ void changeProjection() {
 	}
 }
 
+// function to rotate snowmen models
 void rotateModel(float delta) {
 	// set rotation speed
 	float speed = 90.0f;
@@ -2144,17 +2468,13 @@ void rotateModel(float delta) {
 	}
 }
 
+// function to translate snowmen and change user view
 void translateModel(float delta) {
 	float speed = 1.0f;
 	// reverse direction if '-' pressed
 	if (keyStates['-']) {
 		speed = -speed;
 	}
-	/*if (keyStates['#']) {
-		printf("Hashtag pressed!");
-		fall = SNOW;
-		glutPostRedisplay();
-	}*/
 	// if t pressed along with x, y or z translate in that direction
 	if (keyStates['t']) {
 		// move the model to the left
@@ -2210,7 +2530,7 @@ void translateModel(float delta) {
 	}
 }
 
-
+// function to scale the size of the snowman model
 void scaleModel(float delta) {
 	const float speed = 1.001f;
 	// if c pressed, make scale bigger
@@ -2224,28 +2544,13 @@ void scaleModel(float delta) {
 	}
 }
 
-void reindeerMovements(float delta) {
-	// animate the crowd to be constantly moving here
-	/*if (reindeerPos_z > -4.0f && reindeerBack == false) {
-		reindeerPos_z = reindeerPos_z - 0.15f;
-		reindeerPos += vec3(0.0f, 0.0f, -0.15f);
-	}
-	else {
-		reindeerBack = true;
-		reindeerPos_z += 0.15f;
-		reindeerPos -= vec3(0.0f, 0.0f, -0.15f);
-		if (reindeerPos_z > 8.0f) {
-			reindeerBack = false;
-		}
-	}*/
-
-}
-
+// function to animate the first snowman to be constantly moving back and forward
 void snowmanMovements() {
 	// animate the crowd to be constantly moving here
 	if (snowmanPos_z > -1.0f && snowmanBack == false) {
 		snowmanPos_z = snowmanPos_z - 0.08f;
 		snowmanPos += vec3(0.0f, 0.0f, -0.08f);
+
 	}
 	else {
 		snowmanBack = true;
@@ -2259,6 +2564,7 @@ void snowmanMovements() {
 	}
 }
 
+// function to animate the snowman to constantly be moving back and forward
 void snowman2Movements() {
 	// animate the crowd to be constantly moving here
 	if (snowman2Pos_z > -1.0f && snowman2Back == false) {
@@ -2289,6 +2595,7 @@ void snowman2Movements() {
 	}
 }
 
+// function to animate the third snowman to constantly be moving back and forward
 void snowman3Movements() {
 	// animate the crowd to be constantly moving here
 	if (snowman3Pos_z > -1.0f && snowman3Back == false) {
@@ -2314,7 +2621,48 @@ void snowman3Movements() {
 	}
 }
 
+// function to animate the first snowman to be constantly moving back and forward
+void snowman4Movements() {
+	// animate the crowd to be constantly moving here
+	if (snowman4Pos_z > -1.0f && snowman4Back == false) {
+		snowman4Pos_z = snowman4Pos_z - 0.08f;
+		snowman4Pos += vec3(0.0f, 0.0f, -0.08f);
+
+	}
+	else {
+		snowman4Back = true;
+		snowman4Pos_z += 0.08f;
+		snowman4Pos -= vec3(0.0f, 0.0f, -0.08f);
+		rotate_y4 = 0.0f;
+		if (snowman4Pos_z > 4.0f) {
+			rotate_y4 = 180.0f;
+			snowman4Back = false;
+		}
+	}
+}
+
+// function to animate the first snowman to be constantly moving back and forward
+void snowman5Movements() {
+	// animate the crowd to be constantly moving here
+	if (snowman5Pos_z > -1.0f && snowman5Back == false) {
+		snowman5Pos_z = snowman5Pos_z - 0.08f;
+		snowman5Pos += vec3(0.0f, 0.0f, -0.08f);
+
+	}
+	else {
+		snowman5Back = true;
+		snowman5Pos_z += 0.08f;
+		snowman5Pos -= vec3(0.0f, 0.0f, -0.08f);
+		rotate_y5 = 0.0f;
+		if (snowman5Pos_z > 4.0f) {
+			rotate_y5 = 180.0f;
+			snowman5Back = false;
+		}
+	}
+}
+// function to allow arm waving and hat spinning for hierarchical animation
 void animations(float delta) {
+	// snowman 1 arms
 	if (keyStates['m']) {
 		if (keyStates['l']) {
 			if (armjoint1_z < 1.0f && change == false) {
@@ -2345,6 +2693,131 @@ void animations(float delta) {
 			}
 		}
 	}
+	// snowman 2 arms
+	if (keyStates['n']) {
+		if (keyStates['l']) {
+			if (armjoint1_z2 < 1.0f && change2 == false) {
+				//printf("%f", armjoint1_z);
+				armjoint1_z2 += 10.0f * delta;
+			}
+			else {
+				//printf("%f", armjoint1_z);
+				armjoint1_z2 -= 10.0f * delta;
+				change2 = true;
+				if (armjoint1_z2 < -3.0f) {
+					change2 = false;
+				}
+			}
+		}
+		if (keyStates[';']) {
+			if (armjoint2_z2 < 4.0f && change2 == false) {
+				//printf("%f", armjoint1_z);
+				armjoint2_z2 += 10.0f * delta;
+			}
+			else {
+				//printf("%f", armjoint1_z);
+				armjoint2_z2 -= 10.0f * delta;
+				change2 = true;
+				if (armjoint2_z2 < 1.0f) {
+					change2 = false;
+				}
+			}
+		}
+	}
+	// snowman 3 arms
+	if (keyStates['q']) {
+		if (keyStates['l']) {
+			if (armjoint1_z3 < 1.0f && change3 == false) {
+				//printf("%f", armjoint1_z);
+				armjoint1_z3 += 10.0f * delta;
+			}
+			else {
+				//printf("%f", armjoint1_z);
+				armjoint1_z3 -= 10.0f * delta;
+				change3 = true;
+				if (armjoint1_z3 < -3.0f) {
+					change3 = false;
+				}
+			}
+		}
+		if (keyStates[';']) {
+			if (armjoint2_z3 < 4.0f && change3 == false) {
+				//printf("%f", armjoint1_z);
+				armjoint2_z3 += 10.0f * delta;
+			}
+			else {
+				//printf("%f", armjoint1_z);
+				armjoint2_z3 -= 10.0f * delta;
+				change3 = true;
+				if (armjoint2_z3 < 1.0f) {
+					change3 = false;
+				}
+			}
+		}
+	}
+	// snowman 4 arms
+	if (keyStates['#']) {
+		if (keyStates['l']) {
+			if (armjoint1_z4 < 1.0f && change4 == false) {
+				//printf("%f", armjoint1_z);
+				armjoint1_z4 += 10.0f * delta;
+			}
+			else {
+				//printf("%f", armjoint1_z);
+				armjoint1_z4 -= 10.0f * delta;
+				change4 = true;
+				if (armjoint1_z4 < -3.0f) {
+					change4 = false;
+				}
+			}
+		}
+		if (keyStates[';']) {
+			if (armjoint2_z4 < 4.0f && change4 == false) {
+				//printf("%f", armjoint1_z);
+				armjoint2_z4 += 10.0f * delta;
+			}
+			else {
+				//printf("%f", armjoint1_z);
+				armjoint2_z4 -= 10.0f * delta;
+				change4 = true;
+				if (armjoint2_z4 < 1.0f) {
+					change4 = false;
+				}
+			}
+		}
+	}
+	// snowman 5 arms
+	if (keyStates['=']) {
+		if (keyStates['l']) {
+			if (armjoint1_z5 < 1.0f && change5 == false) {
+				//printf("%f", armjoint1_z);
+				armjoint1_z5 += 10.0f * delta;
+			}
+			else {
+				//printf("%f", armjoint1_z);
+				armjoint1_z5 -= 10.0f * delta;
+				change5 = true;
+				if (armjoint1_z5 < -3.0f) {
+					change5 = false;
+				}
+			}
+		}
+		if (keyStates[';']) {
+			if (armjoint2_z5 < 4.0f && change5 == false) {
+				//printf("%f", armjoint1_z);
+				armjoint2_z5 += 10.0f * delta;
+			}
+			else {
+				//printf("%f", armjoint1_z);
+				armjoint2_z5 -= 10.0f * delta;
+				change5 = true;
+				if (armjoint2_z5 < 1.0f) {
+					change5 = false;
+				}
+			}
+		}
+	}
+	// move arms out/in from body
 	if (keyStates['v']) {
 		arm1Pos += vec3(0.01f, 0.0000f, 0.0f);
 		arm2Pos += vec3(-0.01f, 0.0000f, 0.0f);
@@ -2353,27 +2826,14 @@ void animations(float delta) {
 		arm1Pos += vec3(-0.01f, 0.0000f, 0.0f);
 		arm2Pos += vec3(0.01f, 0.0000f, 0.0f);
 	}
+	// spin hats!
 	if (keyStates['h']) {
 		hat_y += 45.0f * delta;
 		hat_y = fmodf(hat_y, 360.0f);
 	}
 }
 
-/*void InitializeTerrain()
-{
-	// loop through all of the heightfield points, calculating
-	// the coordinates for each point
-	for (int z = 0; z < MAP_Z; z++)
-	{
-		for (int x = 0; x < MAP_X; x++)
-		{
-			terrain[x][z][0] = float(x) * MAP_SCALE;
-			terrain[x][z][1] = (float)imageData[(z * MAP_Z + x) * 3];
-			terrain[x][z][2] = -float(z) * MAP_SCALE;
-		}
-	}
-}*/
-
+// continuously call these functions
 void updateScene() {
 
 	static DWORD last_time = 0;
@@ -2383,6 +2843,7 @@ void updateScene() {
 	float delta = (curr_time - last_time) * 0.001f;
 	last_time = curr_time;
 
+	// rotate the candy canes and have the reindeer rotate around fixed points and change altitude
 	cane_y = cane_y + 5.0f;
 	reindeerPos_z += 2.0f;
 	reindeer2Pos_z += 2.0f;
@@ -2390,12 +2851,45 @@ void updateScene() {
 	reindeer4Pos_z += 2.0f;
 	reindeer5Pos_z += 2.0f;
 	reindeer6Pos_z += 2.0f;
-	reindeerPos_y = 13 + sin(reindeerPos_z/90);
-	// reindeer movements as crowd
-	reindeerMovements(delta);
-	snowmanMovements();
-	snowman2Movements();
-	snowman3Movements();
+	reindeerPos_y = 13 + 2*sin(reindeerPos_z/90);
+
+	// calculate distances from snowmen to camera for collision detection
+	vec3 distance = (snowmanPos - cameraPos);
+	vec3 distance2 = (snowman2Pos - cameraPos);
+	vec3 distance3 = (snowman3Pos - cameraPos);
+	vec3 distance4 = (snowman4Pos - cameraPos);
+	vec3 distance5 = (snowman5Pos - cameraPos);
+	float distanceX = abs(distance.v[0]);
+	float distanceY = abs(distance.v[1]);
+	float distanceZ = abs(distance.v[2]);
+	float distanceX2 = abs(distance2.v[0]);
+	float distanceY2 = abs(distance2.v[1]);
+	float distanceZ2 = abs(distance2.v[2]);
+	float distanceX3 = abs(distance3.v[0]);
+	float distanceY3 = abs(distance3.v[1]);
+	float distanceZ3 = abs(distance3.v[2]);
+	float distanceX4 = abs(distance4.v[0]);
+	float distanceY4 = abs(distance4.v[1]);
+	float distanceZ4 = abs(distance4.v[2]);
+	float distanceX5 = abs(distance5.v[0]);
+	float distanceY5 = abs(distance5.v[1]);
+	float distanceZ5 = abs(distance5.v[2]);
+	// if the x and z values total to less than 4 stop moving the snowman 
+	if (distanceX > 2.0f || distanceZ > 4.0f) {
+		snowmanMovements();
+	}
+	if (distanceX2 > 2.0f || distanceZ2 > 4.0f) {
+		snowman2Movements();
+	}
+	if (distanceX3 > 2.0f || distanceZ3 > 4.0f) {
+		snowman3Movements();
+	}
+	if (distanceX4 > 2.0f || distanceZ4 > 4.0f) {
+		snowman4Movements();
+	}
+	if (distanceX5 > 2.0f || distanceZ5 > 4.0f) {
+		snowman5Movements();
+	}
 	// Changing projection type
 	changeProjection();
 	// Model transformations
@@ -2421,6 +2915,7 @@ void keyUp(unsigned char key, int x, int y) {
 	keyStates[key] = false;
 }
 
+// initialisation function - compile shader and generate buffers
 void init()
 {
 	// Set up the shaders
@@ -2428,34 +2923,9 @@ void init()
 	// load mesh into a vertex buffer array
 	generateObjectBufferMesh();
 
-	// procedural terrain
-	/*int x, z;
-
-	// Ground Verticies
-	  // Ground Colors
-	for (z = 0; z < 100; z++) {
-		for (x = 0; x < 100; x++) {
-			ground_points[x][z][0] = x;
-			ground_points[x][z][1] = accum + (rand() % 2);
-			ground_points[x][z][2] = z;
-
-			ground_colors[z][x][0] = r; // red value
-			ground_colors[z][x][1] = g; // green value
-			ground_colors[z][x][2] = b; // blue value
-			ground_colors[z][x][3] = 0.0; // acummulation factor
-		}
-	}
-
-	// Initialize particles
-	for (loop = 0; loop < MAX_PARTICLES; loop++) {
-		initParticles(loop);
-	}*/
-	// skybox
-	//setupShaders();
-	//setUpSkyBox();
 }
 
-
+// allowing mouse movements
 void mouseCallback(int xposIn, int yposIn) {
 	// if scroll wheel is used, zoom in/out accordingly --- BUGGY AF NEED TO FIX!!
 
@@ -2490,36 +2960,7 @@ void mouseCallback(int xposIn, int yposIn) {
 
 }
 
-/*unsigned int loadCubemap(vector<std::string> faces)
-{
-	unsigned int textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-	int width, height, nrComponents;
-	for (unsigned int i = 0; i < faces.size(); i++)
-	{
-		unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrComponents, 0);
-		if (data)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			stbi_image_free(data);
-		}
-		else
-		{
-			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
-			stbi_image_free(data);
-		}
-	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	return textureID;
-}*/
-
+// main function
 int main(int argc, char** argv) {
 
 	// Set up the window
@@ -2528,14 +2969,14 @@ int main(int argc, char** argv) {
 	glutInitWindowSize(width, height);
 	glutCreateWindow("Winter Wonderland");
 
-	// Tell glut where the display function is
+	// Tell glut where the display function is and call keyboard functions
 	glutDisplayFunc(display);
 	glutIdleFunc(updateScene);
 	glutKeyboardFunc(keyDown);
 	glutKeyboardUpFunc(keyUp);
 	glutPassiveMotionFunc(mouseCallback);
-	// A call to glewInit() must be done after glut is initialized!
 
+	// A call to glewInit() must be done after glut is initialized!
 	GLenum res = glewInit();
 	// Check for any errors
 	if (res != GLEW_OK) {
