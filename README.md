@@ -1,5 +1,9 @@
 # CSU44056OpenGL
 
+Required Features Demo: https://www.youtube.com/watch?v=o9zALyYJxdE
+
+Advanced Features Demo: https://www.youtube.com/watch?v=BNtXgYTrCbc 
+
 Your winter wonderland visualization can be any kind you like, but the project must have the
 following basic functionality:
 
